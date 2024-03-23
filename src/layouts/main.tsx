@@ -9,6 +9,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             background: 'background.default',
             display: 'flex',
             flexDirection: 'column',
+            minHeight: '100vh',
             height: 'fit-content',
             color: 'text.primary',
             backgroundColor: theme => theme.palette.background.default

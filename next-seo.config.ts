@@ -28,11 +28,6 @@ const seo = {
 			}
 		]
 	},
-	twitter: {
-		handle: '@jodaz_',
-		site: '@jodaz_',
-		cardType: 'summary_large_image'
-	},
 	additionalMetaTags: [
 		{
 			name: 'keywords',

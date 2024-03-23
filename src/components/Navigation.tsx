@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Stack, Link } from "@mui/material";
+import { Stack } from "@mui/material";
 import { INTERNAL_LINKS } from '@/constants/internal-links';
-import NextLink from 'next/link';
 import { useTranslation } from 'react-i18next';
+import NavLink from './NavLink';
 
 const Navigation = () => {
     const [initialRender, setInitialRender] = React.useState(false)
@@ -17,13 +17,7 @@ const Navigation = () => {
 	return (
         <Stack spacing={2} direction='row'>
             {INTERNAL_LINKS.map((link, i) => (
-                <Link
-                    component={NextLink}
-                    href={link.route}
-                    key={i}
-                >
-                    {t(link.page)}
-                </Link>
+                <NavLink route={link.route} i={i} name={t(link.page)} />
             ))}
         </Stack>
 	)

@@ -9,6 +9,7 @@ import { IWorkExperience } from "@/types/models"
 import seo from "next-seo.config"
 import WorkExperience from "@/components/WorkExperience"
 import TechStack from "@/components/TechStack"
+import SocialMedia from "@/components/SocialMedia"
 
 const About = () => {
     const { t } = useTranslation('about')
@@ -64,6 +65,13 @@ const About = () => {
                             {t('skills')}
                         </Typography>
                         <TechStack />
+                        <Typography variant="h6" fontWeight={900} gutterBottom>
+                            Social media
+                        </Typography>
+                        <Typography fontWeight={400} gutterBottom>
+                            I am pretty active professionally and personally on social media. If you are interested, follow me on the accounts you like.
+                        </Typography>
+                        <SocialMedia />
                     </Grid>
                 </Grid>
             </Layout>
