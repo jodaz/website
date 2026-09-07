@@ -30,7 +30,7 @@ Useful flags:
 | `--top 12` | how many models to list before folding the rest into "Other" (default 8) |
 | `--include-generic` | also scan harnesses with no documented log format (Gemini CLI, OpenCode, Aider, Cline). Marked *approximate* in the output because those logs may be cumulative. |
 | `--dry-run` | print the summary, write nothing |
-| `--verbose` | also print the per-model table |
+| `--verbose` | also print the per-model table, split into main thread vs subagent tokens |
 | `--out path.json` | write somewhere else |
 
 Preview before committing anything:
@@ -71,6 +71,15 @@ lines carry `message.model` and a `message.usage` object with `input_tokens`,
 are per-message, so they're summed and deduplicated on message id + request id (the
 same message can appear in more than one transcript after a `--resume`).
 
+Subagent turns (the `Agent` tool) are written to `<session>/subagents/agent-*.jsonl`
+with the same line shape, plus `isSidechain: true` and an `agentId`. They carry the
+parent `sessionId`, so they fold into the parent session rather than inflating the
+session count, and each line is bucketed under the model the *subagent* ran on, not
+the parent's. Their tokens are counted into every total and also tracked as
+`subagent` (a slice of `total`) on the totals, each harness and each model, with
+`subagents` on the harness being the number of distinct agent runs. Grok and the
+generic adapters report `subagent: 0`.
+
 **Grok CLI** writes `~/.grok/sessions/<encoded-cwd>/<session-id>/updates.jsonl`.
 Each line is a JSON-RPC envelope; the ones that matter carry
 `params.update.sessionUpdate === "turn_completed"` with a `usage` object, and
@@ -95,7 +104,8 @@ number is readable rather than mysterious.
 ### Adding a harness
 
 Add an adapter function in `scripts/collect-ai-usage.mjs` next to `collectGrok()`
-and call `record({ harness, model, day, session, usage })` per message or turn. Add
+and call `record({ harness, model, day, session, usage, sidechain?, agentId? })` per
+message or turn (`sidechain: true` marks subagent usage). Add
 a label in `HARNESS_LABELS`. The widget picks up new harnesses automatically; the
 first four get a colour from `SERIES_COLORS`, the rest share the neutral slot.
 
@@ -113,7 +123,7 @@ of magnitude.
 | `src/data/ai-usage.ts` | types, number formatting, series colours |
 | `src/lib/ai-usage-props.ts` | build-time props: pulls i18n copy, returns `undefined` when there's no data |
 | `src/components/islands/HeroIsland.tsx` | "Me" / "AI usage" tabs that auto-advance every 30s with a progress bar |
-| `src/components/islands/AiUsageIsland.tsx` | the card: all-time total, 7-day bars, 7/30-day sums, input/output split, models |
+| `src/components/islands/AiUsageIsland.tsx` | the card: all-time total, subagent-share tag, 7-day bars, 7/30-day sums, input/output split, models (bar split main thread / subagent) |
 | `public/locales/{en,es}/common.json` | copy, under `aiUsage` and `profile.tabMe` / `profile.tabAi` |
 
 The hero hides the tabs and shows only the photo when `totals.total` is `0`,

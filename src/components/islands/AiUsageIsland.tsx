@@ -14,6 +14,8 @@ export interface UsageCopy {
   output: string;
   models: string;
   tokens: string;
+  subagents: string;
+  mainThread: string;
   updated: string;
 }
 
@@ -111,9 +113,19 @@ const AiUsageIsland = ({ data, copy, lang }: Props) => {
   const inputShare = (totals.input / io) * 100;
   const modelMax = Math.max(...data.models.map((m) => m.total), 1);
   const modelSum = data.models.reduce((acc, m) => acc + m.total, 0) || 1;
+  const subagent = totals.subagent ?? 0;
+  const subagentShare = totals.total > 0 ? (subagent / totals.total) * 100 : 0;
 
   return (
     <div className="absolute inset-0 flex flex-col gap-3 bg-[color:var(--tint)] p-4 text-[color:var(--ink)] max-[820px]:relative max-[820px]:inset-auto max-[820px]:gap-2 sm:p-5">
+      {subagent > 0 ? (
+        <p
+          className={`${label} absolute right-4 top-4 border-2 border-[color:var(--rule-color)] px-1.5 py-0.5 tabular-nums sm:right-5 sm:top-5`}
+          title={`${full(subagent)} ${copy.tokens} · ${copy.subagents}`}
+        >
+          <span className="text-[color:var(--ink)]">{subagentShare.toFixed(0)}%</span> {copy.subagents}
+        </p>
+      ) : null}
       <div>
         <p className={label}>{copy.allTime}</p>
         <p className="mt-1 text-4xl font-bold leading-none tabular-nums" title={full(totals.total)}>
@@ -150,22 +162,32 @@ const AiUsageIsland = ({ data, copy, lang }: Props) => {
       <div>
         <p className={label}>{copy.models}</p>
         <ul className="mt-1 space-y-1">
-          {data.models.map((m) => (
-            <li key={`${m.harness}:${m.id}`} className="text-xs leading-tight">
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="truncate">{m.label}</span>
-                <span className="shrink-0 tabular-nums text-[color:var(--steel)]">
-                  {((m.total / modelSum) * 100).toFixed(0)}%
-                </span>
-              </div>
-              <div className="mt-0.5 h-px w-full bg-[color:var(--rule-color)]">
+          {data.models.map((m) => {
+            const sub = m.subagent ?? 0;
+            const main = Math.max(m.total - sub, 0);
+            const subPct = m.total > 0 ? (sub / m.total) * 100 : 0;
+            return (
+              <li key={`${m.harness}:${m.id}`} className="text-xs leading-tight">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="truncate">{m.label}</span>
+                  <span className="shrink-0 tabular-nums text-[color:var(--steel)]">
+                    {((m.total / modelSum) * 100).toFixed(0)}%
+                  </span>
+                </div>
                 <div
-                  className="h-full bg-[color:var(--signal-text)]"
-                  style={{ width: `${Math.max((m.total / modelMax) * 100, 1)}%` }}
-                />
-              </div>
-            </li>
-          ))}
+                  className="mt-0.5 flex h-px w-full bg-[color:var(--rule-color)]"
+                  role="img"
+                  aria-label={`${copy.mainThread} ${full(main)}, ${copy.subagents} ${full(sub)}`}
+                  title={`${copy.mainThread} ${full(main)} · ${copy.subagents} ${full(sub)} (${subPct.toFixed(0)}%)`}
+                >
+                  <div className="flex h-full" style={{ width: `${Math.max((m.total / modelMax) * 100, 1)}%` }}>
+                    <span className="h-full bg-[color:var(--signal-text)]" style={{ width: `${100 - subPct}%` }} />
+                    <span className="h-full flex-1 bg-[color:var(--ink)]" />
+                  </div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
 

@@ -265,6 +265,8 @@
     "output": "Salida",
     "models": "Modelos",
     "tokens": "tokens",
+    "subagents": "subagentes",
+    "mainThread": "hilo principal",
     "updated": "Actualizado"
   }
 }

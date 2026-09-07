@@ -26,6 +26,8 @@ export function getAiUsageProps(lang: Lang): AiUsageProps | undefined {
       output: t('aiUsage.output'),
       models: t('aiUsage.models'),
       tokens: t('aiUsage.tokens'),
+      subagents: t('aiUsage.subagents'),
+      mainThread: t('aiUsage.mainThread'),
       updated: t('aiUsage.updated'),
     },
   };

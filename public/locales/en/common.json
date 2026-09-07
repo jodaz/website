@@ -265,6 +265,8 @@
     "output": "Output",
     "models": "Models",
     "tokens": "tokens",
+    "subagents": "subagents",
+    "mainThread": "main thread",
     "updated": "Updated"
   }
 }

@@ -7,6 +7,8 @@ export interface UsageBreakdown {
   cacheRead: number;
   cacheWrite: number;
   reasoning: number;
+  /** Slice of `total` produced by subagent / sidechain turns. Always <= total. */
+  subagent: number;
   total: number;
 }
 
@@ -15,6 +17,8 @@ export interface HarnessUsage extends UsageBreakdown {
   label: string;
   models: number;
   sessions: number;
+  /** Distinct subagent runs (Claude Code `agentId`). */
+  subagents: number;
   approximate?: boolean;
 }
 

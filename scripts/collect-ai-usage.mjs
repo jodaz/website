@@ -146,10 +146,12 @@ function toDay(value, fallback) {
  * Accumulator
  * ------------------------------------------------------------------ */
 
-const EMPTY = () => ({ input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0 });
+// `subagent` is the slice of `total` that came from sidechain / subagent turns
+// (Claude Code `isSidechain: true`); it is a subset, never added on top.
+const EMPTY = () => ({ input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, subagent: 0 });
 
 const store = {
-  harness: new Map(), // harnessId -> { ...EMPTY, sessions:Set, models:Set }
+  harness: new Map(), // harnessId -> { ...EMPTY, sessions:Set, models:Set, agents:Set }
   model: new Map(), // `${harness}::${model}` -> { ...EMPTY, harness, model }
   daily: new Map(), // day -> { total, byHarness: Map }
   sessions: new Set(),
@@ -157,7 +159,7 @@ const store = {
   skippedOutOfRange: 0,
 };
 
-function record({ harness, model, day, usage, session }) {
+function record({ harness, model, day, usage, session, sidechain = false, agentId = null }) {
   if (CUTOFF && day && day < CUTOFF) {
     store.skippedOutOfRange += 1;
     return;
@@ -169,7 +171,7 @@ function record({ harness, model, day, usage, session }) {
 
   let h = store.harness.get(harness);
   if (!h) {
-    h = { ...EMPTY(), sessions: new Set(), models: new Set() };
+    h = { ...EMPTY(), sessions: new Set(), models: new Set(), agents: new Set() };
     store.harness.set(harness, h);
   }
   const mKey = `${harness}::${model}`;
@@ -181,6 +183,11 @@ function record({ harness, model, day, usage, session }) {
   for (const k of ['input', 'output', 'cacheRead', 'cacheWrite', 'reasoning']) {
     h[k] += usage[k];
     m[k] += usage[k];
+  }
+  if (sidechain) {
+    h.subagent += total;
+    m.subagent += total;
+    if (agentId) h.agents.add(agentId);
   }
   h.models.add(model);
   if (session) {
@@ -207,6 +214,11 @@ function record({ harness, model, day, usage, session }) {
  * cache_read_input_tokens. Counts are per message, so they are summed and
  * deduplicated on message id + requestId (the same message can be replayed
  * into more than one transcript file, e.g. after a resume).
+ *
+ * Subagent turns live in `<session>/subagents/agent-*.jsonl` with the same
+ * shape, plus `isSidechain: true` and an `agentId`. They carry the parent
+ * sessionId, so they fold into the parent session and are flagged as subagent
+ * usage rather than counted as extra sessions.
  * ------------------------------------------------------------------ */
 
 async function collectClaudeCode() {
@@ -246,6 +258,8 @@ async function collectClaudeCode() {
           model,
           day: toDay(o.timestamp, fallbackDay),
           session: o.sessionId ?? file,
+          sidechain: o.isSidechain === true,
+          agentId: o.agentId ?? null,
           usage: {
             input: num(u.input_tokens),
             output: num(u.output_tokens),
@@ -511,9 +525,11 @@ const harnesses = [...store.harness.entries()]
     cacheRead: r.cacheRead,
     cacheWrite: r.cacheWrite,
     reasoning: r.reasoning,
+    subagent: r.subagent,
     total: sum(r),
     models: r.models.size,
     sessions: r.sessions.size,
+    subagents: r.agents.size,
   }))
   .filter((h) => h.total > 0)
   .sort((a, b) => b.total - a.total);
@@ -529,6 +545,7 @@ let models = [...store.model.values()]
     cacheRead: r.cacheRead,
     cacheWrite: r.cacheWrite,
     reasoning: r.reasoning,
+    subagent: r.subagent,
     total: sum(r),
   }))
   .filter((m) => m.total > 0)
@@ -544,6 +561,7 @@ if (opts.topModels > 0 && models.length > opts.topModels) {
       acc.cacheRead += m.cacheRead;
       acc.cacheWrite += m.cacheWrite;
       acc.reasoning += m.reasoning;
+      acc.subagent += m.subagent;
       acc.total += m.total;
       return acc;
     },
@@ -557,6 +575,7 @@ if (opts.topModels > 0 && models.length > opts.topModels) {
       cacheRead: 0,
       cacheWrite: 0,
       reasoning: 0,
+      subagent: 0,
       total: 0,
     },
   );
@@ -580,10 +599,11 @@ const totals = harnesses.reduce(
     acc.cacheRead += h.cacheRead;
     acc.cacheWrite += h.cacheWrite;
     acc.reasoning += h.reasoning;
+    acc.subagent += h.subagent;
     acc.total += h.total;
     return acc;
   },
-  { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, total: 0 },
+  { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, subagent: 0, total: 0 },
 );
 
 const payload = {
@@ -612,13 +632,21 @@ if (!detected.length) {
 }
 if (approximate.length) console.log(`Approximate (undocumented log format): ${approximate.join(', ')}`);
 console.log(`Window: ${payload.window.from ?? '—'} → ${payload.window.to ?? '—'} (${days.length} active days)`);
-console.log(`Total tokens: ${pretty(totals.total)}`);
+const pct = (part, whole) => (whole > 0 ? `${((part / whole) * 100).toFixed(1)}%` : '0%');
+console.log(`Total tokens: ${pretty(totals.total)}  (subagents: ${pretty(totals.subagent)}, ${pct(totals.subagent, totals.total)})`);
 for (const h of harnesses) {
-  console.log(`  ${h.label.padEnd(14)} ${pretty(h.total).padStart(16)}  ${h.models} model(s), ${h.sessions} session(s)`);
+  console.log(
+    `  ${h.label.padEnd(14)} ${pretty(h.total).padStart(16)}  ${h.models} model(s), ${h.sessions} session(s), ${h.subagents} subagent run(s)`,
+  );
 }
 if (opts.verbose) {
-  console.log('\nBy model:');
-  for (const m of models) console.log(`  ${m.label.padEnd(26)} ${pretty(m.total).padStart(16)}`);
+  console.log('\nBy model (main thread / subagents):');
+  for (const m of models) {
+    const main = m.total - m.subagent;
+    console.log(
+      `  ${m.label.padEnd(26)} ${pretty(m.total).padStart(16)}  main ${pretty(main).padStart(14)}  sub ${pretty(m.subagent).padStart(14)} (${pct(m.subagent, m.total)})`,
+    );
+  }
 }
 if (store.skippedOutOfRange) console.log(`(${store.skippedOutOfRange} record(s) outside the ${opts.days}-day window)`);
 
