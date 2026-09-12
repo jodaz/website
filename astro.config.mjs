@@ -33,5 +33,6 @@ export default defineConfig({
     '/articles/santa-rosa': '/',
     '/es/articles/santa-rosa': '/es',
   },
+  trailingSlash: 'never',
   output: 'static',
 });

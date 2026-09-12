@@ -39,7 +39,7 @@ const HeaderInteractive = ({ logoSrc, lang, altLangHref, isOpaque = false }: Pro
         <div className="flex items-center justify-between h-12 lg:h-14">
           {/* Logo */}
           <a
-            href={lang === 'es' ? '/es/' : '/'}
+            href={lang === 'es' ? '/es' : '/'}
             className="flex items-center transition-transform hover:scale-105 group px-2"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
