@@ -38,4 +38,4 @@ Disallow: /
 User-agent: cohere-ai
 Disallow: /
 
-Sitemap: https://jesus.vanguarddevs.com/sitemap-index.xml
+Sitemap: https://jodaz.vanguarddevs.com/sitemap-index.xml

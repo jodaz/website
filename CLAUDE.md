@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Personal one-page landing site for Jesus Ordosgoitty (https://jesus.vanguarddevs.com). Astro 5 static output, React 18 islands, Tailwind 3 + shadcn/ui, bilingual (en default at `/`, es at `/es/`). Package manager is pnpm.
+Personal one-page landing site for Jesus Ordosgoitty (https://jodaz.vanguarddevs.com). Astro 5 static output, React 18 islands, Tailwind 3 + shadcn/ui, bilingual (en default at `/`, es at `/es/`). Package manager is pnpm.
 
 ## Commands
 

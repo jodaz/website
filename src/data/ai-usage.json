@@ -1,5 +1,5 @@
 {
-  "$schema": "https://jesus.vanguarddevs.com/schemas/ai-usage.json",
+  "$schema": "https://jodaz.vanguarddevs.com/schemas/ai-usage.json",
   "generatedAt": "2026-09-10T23:01:55.639Z",
   "window": {
     "days": null,
