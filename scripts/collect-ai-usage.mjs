@@ -607,7 +607,7 @@ const totals = harnesses.reduce(
 );
 
 const payload = {
-  $schema: 'https://jesus.vanguarddevs.com/schemas/ai-usage.json',
+  $schema: 'https://jodaz.vanguarddevs.com/schemas/ai-usage.json',
   generatedAt: new Date().toISOString(),
   window: {
     days: opts.days || null,

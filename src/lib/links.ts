@@ -46,6 +46,6 @@ export const PROFILE_SOCIALS = [
 
 export const FOOTER_CREDITS_LINK = {
   label: 'jodaz.dev',
-  href: 'https://jesus.vanguarddevs.com',
+  href: 'https://jodaz.vanguarddevs.com',
   icon: Globe,
 };

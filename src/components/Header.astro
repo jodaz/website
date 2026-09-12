@@ -10,7 +10,9 @@ interface Props {
 
 const { lang = 'en' } = Astro.props;
 
-const altLangHref = lang === 'es' ? Astro.url.pathname.replace('/es', '') || '/' : `/es${Astro.url.pathname}`;
+// Site standard: no trailing slashes (home stays '/').
+const path = Astro.url.pathname.replace(/\/+$/, '');
+const altLangHref = lang === 'es' ? path.replace(/^\/es/, '') || '/' : `/es${path}`;
 ---
 
 <HeaderInteractive

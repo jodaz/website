@@ -10,13 +10,15 @@ interface Props {
 
 const { title, description, image, lang = 'en', alternateUrl } = Astro.props;
 const ogImage = image ?? (lang === 'es' ? '/og-image-es.png' : '/og-image.png');
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+// Site standard: no trailing slashes in public URLs (home is the bare origin).
+// `URL` always serialises the root path as '/', so keep the final value as a string.
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href.replace(/\/+$/, '');
 
 // Compute hreflang URLs
 // lang='en' → this page is English, alternate is Spanish (alternateUrl)
 // lang='es' → this page is Spanish, alternate is English (alternateUrl)
-const enURL = lang === 'en' ? canonicalURL.href : (alternateUrl ?? new URL('/', Astro.site).href);
-const esURL = lang === 'es' ? canonicalURL.href : (alternateUrl ?? new URL('/es/', Astro.site).href);
+const enURL = lang === 'en' ? canonicalURL : (alternateUrl ?? new URL('/', Astro.site).href);
+const esURL = lang === 'es' ? canonicalURL : (alternateUrl ?? new URL('/es', Astro.site).href);
 ---
 
 <!-- Global Metadata -->

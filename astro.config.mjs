@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://jesus.vanguarddevs.com',
+  site: 'https://jodaz.vanguarddevs.com',
   integrations: [
     react(),
     tailwind({ applyBaseStyles: false }),
@@ -33,5 +33,6 @@ export default defineConfig({
     '/articles/santa-rosa': '/',
     '/es/articles/santa-rosa': '/es',
   },
+  trailingSlash: 'never',
   output: 'static',
 });

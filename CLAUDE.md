@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Personal one-page landing site for Jesus Ordosgoitty (https://jesus.vanguarddevs.com). Astro 5 static output, React 18 islands, Tailwind 3 + shadcn/ui, bilingual (en default at `/`, es at `/es/`). Package manager is pnpm.
+Personal one-page landing site for Jesus Ordosgoitty (https://jodaz.vanguarddevs.com). Astro 5 static output, React 18 islands, Tailwind 3 + shadcn/ui, bilingual (en default at `/`, es at `/es/`). Package manager is pnpm.
 
 ## Commands
 
@@ -52,5 +52,6 @@ CI (`.github/workflows/ci.yml`) runs `pnpm lint` then `pnpm build` on PRs to `ma
 
 - TypeScript strict; avoid `any` (`.agent/rules/typescript.md`). Existing `any` escapes in `i18n.ts` and `analytics.ts` are the exceptions, not the pattern.
 - Commit messages follow Conventional Commits (`feat:`, `fix:`, `chore:`).
+- Public URLs never end in a trailing slash: home is `https://jodaz.vanguarddevs.com`, Spanish home is `/es`. `astro.config.mjs` sets `trailingSlash: 'never'`; `BaseHead` strips the slash from canonical/OG/hreflang; `alternateUrl` props, header/footer links and redirect targets follow the same rule.
 - `.agent/` holds rules and skills written for other agent tools (brand guidelines, react-best-practices, shadcn-ui, systematic-debugging). They are reference material, not loaded automatically here.
 - Env: only `PUBLIC_GA_MEASUREMENT_ID` (see `.env.example`). `src/lib/env.ts` reads a different, unused `VITE_` name; `analytics.ts` reads the `PUBLIC_` one.
