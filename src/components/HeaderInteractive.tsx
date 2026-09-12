@@ -1,6 +1,8 @@
 // src/components/HeaderInteractive.tsx
 // React Island — logo name reveal + language switching. Same minimal bar on
-// every screen size: logo left, ES/EN right. No menu, no scroll styling.
+// every screen size: logo left, ES/EN right. No menu. The bar is fixed to the
+// viewport and turns opaque once the page scrolls so content never bleeds
+// through it.
 import { useState, useEffect } from 'react';
 
 interface Props {
@@ -10,9 +12,20 @@ interface Props {
   isOpaque?: boolean;
 }
 
-const HeaderInteractive = ({ logoSrc, lang, altLangHref, isOpaque = false }: Props) => {
+const SCROLL_THRESHOLD_PX = 8;
+
+const HeaderInteractive = ({ logoSrc, lang, altLangHref, isOpaque: forceOpaque = false }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isIntroing, setIsIntroing] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const isOpaque = forceOpaque || isScrolled;
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > SCROLL_THRESHOLD_PX);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     // Intro animation: show name for 1.5 seconds on mount
