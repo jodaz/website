@@ -10,6 +10,7 @@ Astro build bakes that file into the page.
 ```
 ~/.claude/projects/**/*.jsonl          ─┐
 ~/.grok/sessions/**/updates.jsonl      ─┼─> scripts/collect-ai-usage.mjs ─> src/data/ai-usage.json ─> build
+~/.local/share/opencode/opencode.db   ─┤  (SQLite, via node:sqlite)
 (other harnesses, opt-in)              ─┘
 ```
 
@@ -28,7 +29,7 @@ Useful flags:
 | `--days 365` | widen the window (default 90) |
 | `--all` | no window at all |
 | `--top 12` | how many models to list before folding the rest into "Other" (default 8) |
-| `--include-generic` | also scan harnesses with no documented log format (Gemini CLI, OpenCode, Aider, Cline). Marked *approximate* in the output because those logs may be cumulative. |
+| `--include-generic` | also scan harnesses with no documented log format (Gemini CLI, Aider, Cline). Marked *approximate* in the output because those logs may be cumulative. |
 | `--dry-run` | print the summary, write nothing |
 | `--verbose` | also print the per-model table, split into main thread vs subagent tokens |
 | `--out path.json` | write somewhere else |
@@ -100,6 +101,36 @@ assumed:
 Cache reads dominate every agentic run — that's the nature of a long tool-use loop,
 not a mistake in the counting. The widget gives them their own tile so the headline
 number is readable rather than mysterious.
+
+**OpenCode** keeps one row per session in the `session_v2` table of
+`~/.local/share/opencode/opencode.db` (honouring `XDG_DATA_HOME` when set),
+with cumulative counters in `tokens_input` / `tokens_output` /
+`tokens_reasoning` / `tokens_cache_read` / `tokens_cache_write`. Rows are
+read via `node:sqlite` in `readOnly` mode, so this adapter needs Node >= 22.5;
+on older runtimes it warns and skips OpenCode instead of failing the run.
+Sessions with a non-null `parent_id` are subagent runs: they fold into the
+parent session and are flagged as subagent usage, exactly like Claude Code's
+`isSidechain`, with `agent` (`build` / `explore` / `plan` / …) recorded as the
+agent id. The `model` column is a JSON string such as
+`{"id":"mimo-v2.6-flash-free","providerID":"opencode"}`. Only aggregate
+columns are selected — never titles or message content — so the
+aggregate-only guarantee holds.
+
+Two OpenCode-specific quirks, both handled — verified against real logs
+rather than assumed:
+
+- `tokens_input` **excludes** cache reads (a message can show `input: 121`
+  with `cache.read: 48896`), so it is recorded as-is and stays comparable
+  with Claude Code.
+- `tokens_reasoning` is **not included** in `tokens_output` (several messages
+  show reasoning > output — the opposite of Grok's convention). It is folded
+  into output to match the Claude Code convention where output already
+  includes thinking, and kept as a `reasoning` annotation that is never added
+  into any total.
+
+Because usage is read at session granularity, each session's tokens are
+attributed to the day the session started (`time_created`), which is slightly
+coarser than Claude Code's per-message timestamps.
 
 ### Adding a harness
 

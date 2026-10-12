@@ -36,7 +36,7 @@ CI (`.github/workflows/ci.yml`) runs `pnpm lint` then `pnpm build` on PRs to `ma
 - Path alias `@/` maps to `src/`.
 
 ### AI usage widget
-`scripts/collect-ai-usage.mjs` reads Claude Code / Grok CLI session logs on the developer machine and writes aggregate-only, all-time counts to `src/data/ai-usage.json`, which is committed and baked into the build. `getAiUsageProps()` returns `undefined` when totals are zero, and `HeroIsland` then hides the tabs and shows only the photo, so a fresh checkout still builds. The 7- and 30-day figures are derived from the JSON's `daily` series inside the island. Full details, flags, and how to add a harness adapter: `docs/ai-usage-widget.md`.
+`scripts/collect-ai-usage.mjs` reads Claude Code / Grok CLI session logs and the OpenCode SQLite session store on the developer machine and writes aggregate-only, all-time counts to `src/data/ai-usage.json`, which is committed and baked into the build. `getAiUsageProps()` returns `undefined` when totals are zero, and `HeroIsland` then hides the tabs and shows only the photo, so a fresh checkout still builds. The 7- and 30-day figures are derived from the JSON's `daily` series inside the island. Full details, flags, and how to add a harness adapter: `docs/ai-usage-widget.md`.
 
 ### Legacy components
 `src/components/` still contains sections from the previous multi-page site (`PortfolioSection`, `ServicesSection`, `ContactSection`, `ArticlesList`, `Footer`, `views/`, `content/projects/` collection). Only `404.astro` reaches some of them via `BottomGridWrapper`; the home page does not. Don't assume they are wired up or that their copy is current.

@@ -3,9 +3,10 @@
  * collect-ai-usage.mjs — aggregate local AI coding-harness token usage.
  *
  * Reads the JSONL session logs that Claude Code and Grok CLI already
- * write on this machine, and emits a small aggregate JSON for the website
- * widget. Nothing but counts leaves the log files: no prompts, no file paths,
- * no project names, no session ids.
+ * write on this machine, plus the SQLite session store that OpenCode
+ * keeps at ~/.local/share/opencode/opencode.db, and emits a small
+ * aggregate JSON for the website widget. Nothing but counts leaves the
+ * log files: no prompts, no file paths, no project names, no session ids.
  *
  * Usage:
  *   node scripts/collect-ai-usage.mjs                  # all time -> src/data/ai-usage.json
@@ -15,7 +16,9 @@
  *   node scripts/collect-ai-usage.mjs --dry-run        # print the summary, write nothing
  *   node scripts/collect-ai-usage.mjs --out path.json
  *
- * Requires Node >= 18. No dependencies.
+ * Requires Node >= 18. No dependencies. The OpenCode adapter additionally
+ * needs `node:sqlite`, which ships with Node >= 22.5; on older runtimes it
+ * warns and skips OpenCode rather than failing the whole run.
  */
 
 import fs from 'node:fs';
@@ -349,17 +352,127 @@ async function collectGrok() {
 }
 
 /* ------------------------------------------------------------------ *
+ * Adapter: OpenCode  (~/.local/share/opencode/opencode.db)
+ *
+ * OpenCode keeps sessions in SQLite, one row per session in `session_v2`,
+ * with cumulative counters in tokens_input / tokens_output /
+ * tokens_reasoning / tokens_cache_read / tokens_cache_write.
+ * `parent_id IS NOT NULL` marks a subagent session (folded into the
+ * parent session and flagged as subagent usage, like Claude Code's
+ * `isSidechain`), and `agent` (build/explore/plan/...) plays the role of
+ * `agentId`. `model` is a JSON string such as
+ * {"id":"mimo-v2.6-flash-free","providerID":"opencode"}.
+ *
+ * Verified against real logs rather than assumed:
+ *   input EXCLUDES cache reads (a message can show input: 121 with
+ *   cache.read: 48896), so it is recorded as-is for comparability with
+ *   Claude Code.
+ *   tokens_reasoning is NOT included in tokens_output (several messages
+ *   show reasoning > output), so it is folded into output here to match
+ *   the Claude Code convention where output already includes thinking;
+ *   reasoning is also carried as an annotation rather than summed.
+ *
+ * Only aggregate columns are selected — never title or message content —
+ * so the "only counts leave the logs" guarantee holds.
+ * ------------------------------------------------------------------ */
+
+async function collectOpenCode() {
+  let DatabaseSync;
+  try {
+    ({ DatabaseSync } = await import('node:sqlite'));
+  } catch {
+    console.warn('opencode: node:sqlite unavailable (needs Node >= 22.5), skipping OpenCode.');
+    return false;
+  }
+
+  const dataHome = process.env.XDG_DATA_HOME || path.join(HOME, '.local', 'share');
+  const candidates = [
+    process.env.OPENCODE_DATA_DIR,
+    path.join(dataHome, 'opencode', 'opencode.db'),
+    path.join(HOME, '.local', 'share', 'opencode', 'opencode.db'),
+  ].filter(Boolean);
+  const seenPaths = new Set();
+  const dbFiles = candidates.filter((p) => {
+    if (seenPaths.has(p)) return false;
+    seenPaths.add(p);
+    return exists(p);
+  });
+  if (!dbFiles.length) return false;
+
+  let found = false;
+  for (const dbFile of dbFiles) {
+    let db;
+    try {
+      db = new DatabaseSync(dbFile, { readOnly: true });
+    } catch {
+      continue;
+    }
+    try {
+      const fallbackDay = toDay(fs.statSync(dbFile).mtimeMs, null);
+      const rows = db
+        .prepare(
+          `SELECT id, parent_id, agent, model,
+                  tokens_input, tokens_output, tokens_reasoning,
+                  tokens_cache_read, tokens_cache_write, time_created
+             FROM session_v2`,
+        )
+        .all();
+      found = true;
+      store.files += 1;
+      for (const row of rows) {
+        let model = 'unknown';
+        if (typeof row.model === 'string' && row.model) {
+          try {
+            const parsed = JSON.parse(row.model);
+            if (typeof parsed?.id === 'string' && parsed.id) model = parsed.id;
+            else model = row.model;
+          } catch {
+            model = row.model;
+          }
+        }
+        if (model === '<synthetic>' || model === 'unknown') continue;
+        const reasoning = num(row.tokens_reasoning);
+        const output = num(row.tokens_output) + reasoning;
+        record({
+          harness: 'opencode',
+          model,
+          day: toDay(row.time_created, fallbackDay),
+          session: row.id ?? dbFile,
+          sidechain: row.parent_id != null,
+          agentId: row.agent ?? null,
+          usage: {
+            input: num(row.tokens_input),
+            output,
+            cacheRead: num(row.tokens_cache_read),
+            cacheWrite: num(row.tokens_cache_write),
+            reasoning,
+          },
+        });
+      }
+    } catch {
+      /* table missing or unreadable — not an OpenCode store */
+    } finally {
+      try {
+        db?.close();
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+  return found;
+}
+
+/* ------------------------------------------------------------------ *
  * Adapter: generic (opt-in, approximate)
  *
  * For harnesses without a documented log shape (Grok CLI, Gemini CLI,
- * OpenCode, ...) we deep-scan JSON/JSONL records for a usage-shaped object and
+ * ...) we deep-scan JSON/JSONL records for a usage-shaped object and
  * take the nearest model name. Per-message logs come out right; cumulative
  * logs may over-count, which is why these sources are flagged `approximate`.
  * ------------------------------------------------------------------ */
 
 const GENERIC_ROOTS = [
   ['gemini-cli', path.join(HOME, '.gemini')],
-  ['opencode', path.join(HOME, '.local', 'share', 'opencode')],
   ['crush', path.join(HOME, '.local', 'share', 'crush')],
   ['aider', path.join(HOME, '.aider')],
   ['cline', path.join(HOME, '.cline')],
@@ -512,6 +625,7 @@ const sum = (r) => r.input + r.output + r.cacheRead + r.cacheWrite;
 const detected = [];
 if (await collectClaudeCode()) detected.push('claude-code');
 if (await collectGrok()) detected.push('grok');
+if (await collectOpenCode()) detected.push('opencode');
 const approximate = opts.includeGeneric ? await collectGeneric() : [];
 detected.push(...approximate);
 
@@ -626,7 +740,7 @@ const pretty = (n) => n.toLocaleString('en-US');
 console.log(`\nScanned ${store.files} log file(s) across: ${detected.join(', ') || 'nothing found'}`);
 if (!detected.length) {
   console.log(
-    'No harness logs found. Looked in ~/.claude/projects and ~/.grok/sessions' +
+    'No harness logs found. Looked in ~/.claude/projects, ~/.grok/sessions and the OpenCode SQLite store' +
       (opts.includeGeneric ? ', plus the generic roots.' : '. Try --include-generic for other tools.'),
   );
 }
