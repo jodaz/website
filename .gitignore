@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# graft MCP index cache
+graft/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
