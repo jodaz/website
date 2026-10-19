@@ -1,51 +1,51 @@
 {
   "$schema": "https://jodaz.vanguarddevs.com/schemas/ai-usage.json",
-  "generatedAt": "2026-10-18T03:51:07.374Z",
+  "generatedAt": "2026-10-19T03:51:06.665Z",
   "window": {
     "days": null,
     "from": "2026-09-04",
-    "to": "2026-10-17"
+    "to": "2026-10-19"
   },
   "totals": {
-    "input": 13670702,
-    "output": 6133607,
-    "cacheRead": 1713228468,
-    "cacheWrite": 60738242,
+    "input": 13707889,
+    "output": 6166622,
+    "cacheRead": 1718000384,
+    "cacheWrite": 61130338,
     "reasoning": 252032,
     "subagent": 1021888044,
-    "total": 1793771019,
-    "sessions": 198,
-    "activeDays": 25
+    "total": 1799005233,
+    "sessions": 204,
+    "activeDays": 27
   },
   "harnesses": [
     {
       "id": "claude-code",
       "label": "Claude Code",
       "approximate": false,
-      "input": 8923350,
-      "output": 5559653,
-      "cacheRead": 1675167765,
-      "cacheWrite": 60738242,
+      "input": 8923518,
+      "output": 5579690,
+      "cacheRead": 1679614911,
+      "cacheWrite": 61130338,
       "reasoning": 0,
       "subagent": 1008389321,
-      "total": 1750389010,
+      "total": 1755248457,
       "models": 8,
-      "sessions": 139,
+      "sessions": 144,
       "subagents": 500
     },
     {
       "id": "opencode",
       "label": "OpenCode",
       "approximate": false,
-      "input": 4262551,
-      "output": 550486,
-      "cacheRead": 36832159,
+      "input": 4299570,
+      "output": 563464,
+      "cacheRead": 37156929,
       "cacheWrite": 0,
       "reasoning": 242427,
       "subagent": 13498723,
-      "total": 41645196,
-      "models": 5,
-      "sessions": 54,
+      "total": 42019963,
+      "models": 6,
+      "sessions": 55,
       "subagents": 2
     },
     {
@@ -83,13 +83,13 @@
       "label": "Claude Opus 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 11674,
-      "output": 2466573,
-      "cacheRead": 601705137,
-      "cacheWrite": 22942833,
+      "input": 11730,
+      "output": 2473545,
+      "cacheRead": 603108787,
+      "cacheWrite": 23032591,
       "reasoning": 0,
       "subagent": 188462210,
-      "total": 627126217
+      "total": 628626653
     },
     {
       "id": "claude-fable-5-1",
@@ -122,26 +122,26 @@
       "label": "Claude Sonnet 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 1850,
-      "output": 159051,
-      "cacheRead": 47245117,
-      "cacheWrite": 5249098,
+      "input": 1958,
+      "output": 171687,
+      "cacheRead": 50244609,
+      "cacheWrite": 5507256,
       "reasoning": 0,
       "subagent": 40688432,
-      "total": 52655116
+      "total": 55925510
     },
     {
       "id": "claude-haiku-5-5",
       "label": "Claude Haiku 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 1346,
-      "output": 124967,
-      "cacheRead": 44106454,
-      "cacheWrite": 3388010,
+      "input": 1350,
+      "output": 125396,
+      "cacheRead": 44150458,
+      "cacheWrite": 3432190,
       "reasoning": 0,
       "subagent": 40880898,
-      "total": 47620777
+      "total": 47709394
     },
     {
       "id": "deepseek-v4.1-flash",
@@ -171,16 +171,16 @@
     },
     {
       "id": "other",
-      "label": "Other (7)",
+      "label": "Other (8)",
       "harness": "other",
       "vendor": "Other",
-      "input": 4747352,
-      "output": 573954,
-      "cacheRead": 38060703,
+      "input": 4784371,
+      "output": 586932,
+      "cacheRead": 38385473,
       "cacheWrite": 0,
       "reasoning": 252032,
       "subagent": 13498723,
-      "total": 43382009
+      "total": 43756776
     }
   ],
   "daily": [
@@ -358,6 +358,21 @@
       "total": 58025390,
       "byHarness": {
         "claude-code": 58025390
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "total": 3968134,
+      "byHarness": {
+        "claude-code": 3593367,
+        "opencode": 374767
+      }
+    },
+    {
+      "date": "2026-10-19",
+      "total": 1266080,
+      "byHarness": {
+        "claude-code": 1266080
       }
     }
   ],

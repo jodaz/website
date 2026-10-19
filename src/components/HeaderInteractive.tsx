@@ -53,7 +53,7 @@ const HeaderInteractive = ({ logoSrc, lang, altLangHref, isOpaque: forceOpaque =
           {/* Logo */}
           <a
             href={lang === 'es' ? '/es' : '/'}
-            className="flex items-center transition-transform hover:scale-105 group px-2"
+            className="flex items-center transition-transform hover:scale-105 group"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >

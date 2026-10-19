@@ -234,7 +234,6 @@ All colors MUST be HSL.
   --rule-color: rgba(22, 18, 31, 0.14);
   --rule: 1px solid var(--rule-color);
   --rule-strong: 1px solid rgba(22, 18, 31, 0.24);
-  --pad: clamp(24px, 5vw, 88px);
 
   min-height: 100dvh;
   display: flex;
@@ -343,9 +342,7 @@ All colors MUST be HSL.
 .profile-main {
   flex: 1;
   width: 100%;
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: clamp(40px, 6vw, 96px) var(--pad);
+  padding: clamp(40px, 6vw, 96px) 0;
   display: grid;
   grid-template-columns: 1fr minmax(280px, 460px);
   align-items: center;

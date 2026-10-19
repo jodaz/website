@@ -62,7 +62,7 @@ const HeroIsland = ({ name, role, bio, photoSrc, photoAlt, socials, lang, tabs, 
       <div className="absolute inset-0 bg-black opacity-50 w-full h-full z-0">
         <ColorBends colors={['#4833e6']} noise={0.15} />
       </div>
-      <div className="profile on-hero relative z-10" data-theme="dark">
+      <div className="profile on-hero container mx-auto px-4 relative z-10" data-theme="dark">
         <div className="profile-main">
           <div className="profile-intro animate-slide-up-delayed">
             <h1 className="display">{name}</h1>
