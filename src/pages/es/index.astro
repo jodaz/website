@@ -5,11 +5,13 @@ import { useTranslations } from '@/lib/i18n';
 import HeroIsland from '@/components/islands/HeroIsland';
 import StructuredData from '@/components/StructuredData.astro';
 import { getAiUsageProps } from '@/lib/ai-usage-props';
+import { getLatestPost, postHref, postSlug } from '@/lib/blog';
 import { PROFILE_SOCIALS } from '@/lib/links';
 import founder from '@/assets/images/founder.jpeg';
 
 const lang = 'es' as const;
 const t = useTranslations(lang);
+const latestPost = await getLatestPost(lang);
 
 const heroProps = {
   name: t('profile.name'),
@@ -21,6 +23,13 @@ const heroProps = {
   lang,
   tabs: { me: t('profile.tabMe'), ai: t('profile.tabAi') },
   usage: getAiUsageProps(lang),
+  latest: latestPost
+    ? {
+        label: t('blog.latestLabel'),
+        title: latestPost.data.title,
+        href: postHref(lang, postSlug(latestPost)),
+      }
+    : undefined,
 };
 ---
 

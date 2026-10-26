@@ -15,6 +15,12 @@ interface Social {
   path: string;
 }
 
+interface LatestPost {
+  label: string;
+  title: string;
+  href: string;
+}
+
 interface Props {
   name: string;
   role: string;
@@ -25,6 +31,7 @@ interface Props {
   lang: string;
   tabs: { me: string; ai: string };
   usage?: { data: AiUsage; copy: UsageCopy };
+  latest?: LatestPost;
 }
 
 type Tab = 'me' | 'ai';
@@ -33,7 +40,7 @@ export const SLIDE_MS = 10_000;
 
 const TABS: Tab[] = ['me', 'ai'];
 
-const HeroIsland = ({ name, role, bio, photoSrc, photoAlt, socials, lang, tabs, usage }: Props) => {
+const HeroIsland = ({ name, role, bio, photoSrc, photoAlt, socials, lang, tabs, usage, latest }: Props) => {
   const [tab, setTab] = useState<Tab>('me');
   // Bumped on every slide change (auto or manual) so the interval and the CSS
   // animations restart from zero.
@@ -64,7 +71,7 @@ const HeroIsland = ({ name, role, bio, photoSrc, photoAlt, socials, lang, tabs, 
       </div>
       <div className="profile on-hero container mx-auto px-4 relative z-10" data-theme="dark">
         <div className="profile-main">
-          <div className="profile-intro animate-slide-up-delayed">
+          <div className="profile-intro min-w-0 animate-slide-up-delayed">
             <h1 className="display">{name}</h1>
             <p className="mono profile-role">{role}</p>
             <p className="profile-bio">{bio}</p>
@@ -85,6 +92,21 @@ const HeroIsland = ({ name, role, bio, photoSrc, photoAlt, socials, lang, tabs, 
                 </a>
               ))}
             </div>
+            {latest ? (
+              <a
+                href={latest.href}
+                aria-label={`${latest.label}: ${latest.title}`}
+                className="group mt-[22px] flex w-full max-w-full items-center gap-2 overflow-hidden rounded-none border-2 border-primary bg-transparent px-3 py-2 text-blue-50 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground focus-visible:bg-primary focus-visible:text-primary-foreground focus-visible:outline-none sm:w-auto sm:max-w-md"
+              >
+                <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.12em] text-primary transition-colors duration-300 group-hover:text-primary-foreground group-focus-visible:text-primary-foreground">
+                  {latest.label}
+                </span>
+                <span aria-hidden="true" className="shrink-0">
+                  →
+                </span>
+                <span className="min-w-0 truncate font-semibold">{latest.title}</span>
+              </a>
+            ) : null}
           </div>
           <div className="profile-panel animate-slide-up-delayed" style={{ animationDelay: '0.2s' }}>
             {rotate ? (
