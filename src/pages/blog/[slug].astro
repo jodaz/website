@@ -1,0 +1,62 @@
+---
+// src/pages/blog/[slug].astro — English post page
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostLayout from '@/components/blog/PostLayout.astro';
+import StructuredData from '@/components/StructuredData.astro';
+import { useTranslations } from '@/lib/i18n';
+import {
+  getPosts,
+  getTranslation,
+  postHref,
+  postSlug,
+  type BlogPost,
+} from '@/lib/blog';
+
+const lang = 'en' as const;
+
+export const getStaticPaths = (async () => {
+  // Literal, not `lang`: Astro hoists this function out of the frontmatter scope.
+  const posts = await getPosts('en');
+  return posts.map((post) => ({
+    params: { slug: postSlug(post) },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const t = useTranslations(lang);
+
+const translation = await getTranslation(post);
+const alternateUrl = translation
+  ? new URL(postHref('es', postSlug(translation)), Astro.site).href
+  : undefined;
+
+const postUrl = new URL(postHref(lang, postSlug(post)), Astro.site).href;
+---
+
+<BaseLayout
+  title={`${post.data.title} — ${t('profile.name')}`}
+  description={post.data.description}
+  lang={lang}
+  alternateUrl={alternateUrl}
+>
+  <StructuredData
+    schemas={[
+      {
+        type: 'article',
+        headline: post.data.title,
+        description: post.data.description,
+        datePublished: post.data.publishDate.toISOString(),
+        tags: post.data.tags,
+        url: postUrl,
+        lang,
+      },
+    ]}
+  />
+  <PostLayout post={post} lang={lang} />
+</BaseLayout>

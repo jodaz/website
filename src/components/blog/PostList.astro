@@ -1,0 +1,76 @@
+---
+// src/components/blog/PostList.astro
+// Chronological index of posts: date · title · one-line description · read
+// time, separated by 2px rules. No cards, no client JS.
+import type { Lang } from '@/lib/i18n';
+import { useTranslations } from '@/lib/i18n';
+import { postHref, postSlug, readingTime, type BlogPost } from '@/lib/blog';
+
+interface Props {
+  posts: BlogPost[];
+  lang: Lang;
+}
+
+const { posts, lang } = Astro.props;
+const t = useTranslations(lang);
+const locale = lang === 'es' ? 'es-ES' : 'en-US';
+
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat(locale, {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
+
+const readLabel = (body: string) =>
+  t('blog.readingTime').replace('{n}', String(readingTime(body)));
+---
+
+<section class="container mx-auto px-4 pb-24 pt-28 md:pt-36">
+  <header class="max-w-[68ch]">
+    <h1 class="text-4xl font-bold uppercase leading-none tracking-tight text-foreground md:text-6xl">
+      {t('blog.title')}
+    </h1>
+    <p class="mt-6 text-base leading-relaxed text-muted-foreground">
+      {t('blog.description')}
+    </p>
+  </header>
+
+  <div class="mt-14 border-t-2 border-foreground/20">
+    {posts.length === 0 ? (
+      <p class="py-10 text-xs uppercase tracking-[0.15em] text-muted-foreground">
+        {t('blog.empty')}
+      </p>
+    ) : (
+      <ol>
+        {posts.map((post) => (
+          <li class="border-b-2 border-foreground/20">
+            <a
+              href={postHref(lang, postSlug(post))}
+              class="group grid grid-cols-[minmax(0,1fr)] gap-2 py-6 md:grid-cols-[9rem_minmax(0,1fr)_auto] md:items-baseline md:gap-8"
+            >
+              <time
+                datetime={post.data.publishDate.toISOString()}
+                class="text-xs uppercase tracking-[0.15em] text-muted-foreground"
+              >
+                {formatDate(post.data.publishDate)}
+              </time>
+              <span class="block">
+                <span class="block text-xl font-bold leading-snug text-foreground transition-colors group-hover:text-primary md:text-2xl">
+                  {post.data.title}
+                </span>
+                <span class="mt-1 block truncate text-sm text-muted-foreground">
+                  {post.data.description}
+                </span>
+              </span>
+              <span class="whitespace-nowrap text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                {readLabel(post.body)}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    )}
+  </div>
+</section>

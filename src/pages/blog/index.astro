@@ -1,0 +1,20 @@
+---
+// src/pages/blog/index.astro — English writings index
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostList from '@/components/blog/PostList.astro';
+import { useTranslations } from '@/lib/i18n';
+import { getPosts } from '@/lib/blog';
+
+const lang = 'en' as const;
+const t = useTranslations(lang);
+const posts = await getPosts(lang);
+---
+
+<BaseLayout
+  title={t('blog.metaTitle')}
+  description={t('blog.description')}
+  lang={lang}
+  alternateUrl="https://jodaz.vanguarddevs.com/es/blog"
+>
+  <PostList posts={posts} lang={lang} />
+</BaseLayout>
