@@ -3,8 +3,7 @@
     "services": "Services",
     "portfolio": "Portfolio",
     "contact": "Contact",
-    "about": "About me",
-    "writings": "Writings"
+    "about": "About me"
   },
   "buttons": {
     "website": "Website",
@@ -269,15 +268,5 @@
     "subagents": "subagents",
     "mainThread": "main thread",
     "updated": "Updated"
-  },
-  "blog": {
-    "title": "Writings",
-    "metaTitle": "Writings — Jesus Ordosgoitty",
-    "description": "Notes on building for the web: architecture, performance, and the small decisions that keep a site fast and maintainable.",
-    "latestLabel": "Latest article",
-    "readingTime": "{n} min read",
-    "updated": "Updated {date}",
-    "backToIndex": "All writings",
-    "empty": "No articles yet."
   }
 }

@@ -1,52 +1,23 @@
 ---
 // src/components/Header.astro
-import { useTranslations, type Lang } from '@/lib/i18n';
-import { blogHref } from '@/lib/blog';
+import type { Lang } from '@/lib/i18n';
 import brandLogo from '@/assets/jodaz.png';
 import HeaderInteractive from '@/components/HeaderInteractive.tsx';
 
 interface Props {
   lang?: Lang;
-  alternateUrl?: string; // URL of the equivalent page in the other language
 }
 
-const { lang = 'en', alternateUrl } = Astro.props;
+const { lang = 'en' } = Astro.props;
 
-// Site standard: no trailing slashes (home is '' after stripping).
+// Site standard: no trailing slashes (home stays '/').
 const path = Astro.url.pathname.replace(/\/+$/, '');
-const otherLang: Lang = lang === 'es' ? 'en' : 'es';
-
-// Prefer the canonical alternate URL from the page; fall back to the blog
-// index for untranslated posts, then to the mechanical path swap.
-const alternatePath = alternateUrl
-  ? new URL(alternateUrl, Astro.url).pathname.replace(/\/+$/, '')
-  : undefined;
-const altLangHref =
-  alternatePath !== undefined
-    ? alternatePath || '/'
-    : path.startsWith(`${blogHref(lang)}/`)
-      ? blogHref(otherLang)
-      : lang === 'es'
-        ? path.replace(/^\/es/, '') || '/'
-        : `/es${path}`;
-
-// Only the home page has a dark hero behind the transparent bar.
-const isHome = path === '' || path === '/es';
-const isOpaque = !isHome;
-
-const t = useTranslations(lang);
-const writingsHref = blogHref(lang);
-const writingsLabel = t('nav.writings');
-const isWritingsActive = path === writingsHref || path.startsWith(`${writingsHref}/`);
+const altLangHref = lang === 'es' ? path.replace(/^\/es/, '') || '/' : `/es${path}`;
 ---
 
 <HeaderInteractive
   logoSrc={brandLogo.src}
   lang={lang}
   altLangHref={altLangHref}
-  writingsHref={writingsHref}
-  writingsLabel={writingsLabel}
-  isWritingsActive={isWritingsActive}
-  isOpaque={isOpaque}
   client:load
 />

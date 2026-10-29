@@ -23,7 +23,7 @@ const { title, description, lang = 'en', alternateUrl } = Astro.props;
     <LanguageDetector lang={lang} alternateUrl={alternateUrl} />
   </head>
   <body class="min-h-screen bg-background flex flex-col">
-    <Header lang={lang} alternateUrl={alternateUrl} />
+    <Header lang={lang} />
     <main class="flex-1">
       <slot />
     </main>

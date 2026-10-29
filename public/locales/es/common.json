@@ -3,8 +3,7 @@
     "services": "Servicios",
     "portfolio": "Portafolio",
     "contact": "Contacto",
-    "about": "Sobre mí",
-    "writings": "Escritos"
+    "about": "Sobre mí"
   },
   "buttons": {
     "website": "Sitio Web",
@@ -269,15 +268,5 @@
     "subagents": "subagentes",
     "mainThread": "hilo principal",
     "updated": "Actualizado"
-  },
-  "blog": {
-    "title": "Escritos",
-    "metaTitle": "Escritos — Jesús Ordosgoitty",
-    "description": "Notas sobre desarrollo web: arquitectura, rendimiento y las pequeñas decisiones que mantienen un sitio rápido y fácil de mantener.",
-    "latestLabel": "Último artículo",
-    "readingTime": "{n} min de lectura",
-    "updated": "Actualizado el {date}",
-    "backToIndex": "Todos los escritos",
-    "empty": "Todavía no hay artículos."
   }
 }
