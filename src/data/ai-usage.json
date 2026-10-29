@@ -1,20 +1,20 @@
 {
   "$schema": "https://jodaz.vanguarddevs.com/schemas/ai-usage.json",
-  "generatedAt": "2026-10-28T03:51:08.564Z",
+  "generatedAt": "2026-10-29T03:51:09.073Z",
   "window": {
     "days": null,
     "from": "2026-09-04",
-    "to": "2026-10-27"
+    "to": "2026-10-29"
   },
   "totals": {
-    "input": 160036936,
-    "output": 17428222,
-    "cacheRead": 2692440825,
-    "cacheWrite": 44749501,
+    "input": 166977632,
+    "output": 17179443,
+    "cacheRead": 2271159616,
+    "cacheWrite": 34460926,
     "reasoning": 252032,
-    "subagent": 627690646,
-    "total": 2914655484,
-    "sessions": 455,
+    "subagent": 208327082,
+    "total": 2489777617,
+    "sessions": 458,
     "activeDays": 31
   },
   "harnesses": [
@@ -22,16 +22,16 @@
       "id": "claude-code",
       "label": "Claude Code",
       "approximate": false,
-      "input": 154632530,
-      "output": 16689609,
-      "cacheRead": 2646850679,
-      "cacheWrite": 44749501,
+      "input": 161573226,
+      "output": 16440830,
+      "cacheRead": 2225569470,
+      "cacheWrite": 34460926,
       "reasoning": 0,
-      "subagent": 614191923,
-      "total": 2862922319,
-      "models": 7,
-      "sessions": 388,
-      "subagents": 359
+      "subagent": 194828359,
+      "total": 2438044452,
+      "models": 6,
+      "sessions": 391,
+      "subagents": 258
     },
     {
       "id": "opencode",
@@ -70,52 +70,39 @@
       "label": "Deepseek V4.1 Flash",
       "harness": "claude-code",
       "vendor": "DeepSeek",
-      "input": 154606015,
-      "output": 12893024,
-      "cacheRead": 1417680472,
+      "input": 161558924,
+      "output": 13400616,
+      "cacheRead": 1472582390,
       "cacheWrite": 0,
       "reasoning": 0,
       "subagent": 47747300,
-      "total": 1585179511
+      "total": 1647541930
     },
     {
       "id": "claude-opus-5-5",
       "label": "Claude Opus 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 10060,
-      "output": 2419268,
-      "cacheRead": 588383528,
-      "cacheWrite": 21177854,
+      "input": 7030,
+      "output": 1863682,
+      "cacheRead": 430456138,
+      "cacheWrite": 16099658,
       "reasoning": 0,
-      "subagent": 120787032,
-      "total": 611990710
-    },
-    {
-      "id": "claude-sonnet-5",
-      "label": "Claude Sonnet 5",
-      "harness": "claude-code",
-      "vendor": "Anthropic",
-      "input": 6168,
-      "output": 279941,
-      "cacheRead": 327419816,
-      "cacheWrite": 5790014,
-      "reasoning": 0,
-      "subagent": 333495939,
-      "total": 333495939
+      "subagent": 50312982,
+      "total": 448426508
     },
     {
       "id": "claude-sonnet-5-5",
       "label": "Claude Sonnet 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 4342,
-      "output": 854951,
-      "cacheRead": 239345740,
-      "cacheWrite": 10911108,
+      "input": 4688,
+      "output": 959565,
+      "cacheRead": 266665111,
+      "cacheWrite": 12040338,
       "reasoning": 0,
       "subagent": 44460064,
-      "total": 251116141
+      "total": 279669702
     },
     {
       "id": "claude-haiku-5-5",
@@ -144,19 +131,6 @@
       "total": 22188404
     },
     {
-      "id": "claude-haiku-4-5-20251001",
-      "label": "Claude Haiku 4.5",
-      "harness": "claude-code",
-      "vendor": "Anthropic",
-      "input": 3160,
-      "output": 852,
-      "cacheRead": 17544461,
-      "cacheWrite": 899070,
-      "reasoning": 0,
-      "subagent": 18447543,
-      "total": 18447543
-    },
-    {
       "id": "space-bunny-free",
       "label": "Space Bunny Free",
       "harness": "opencode",
@@ -170,17 +144,43 @@
       "total": 15203684
     },
     {
+      "id": "deepseek-v4-pro",
+      "label": "Deepseek V4 Pro",
+      "harness": "opencode",
+      "vendor": "DeepSeek",
+      "input": 602891,
+      "output": 156740,
+      "cacheRead": 7358691,
+      "cacheWrite": 0,
+      "reasoning": 0,
+      "subagent": 0,
+      "total": 8118322
+    },
+    {
+      "id": "mimo-v2.6-flash-free",
+      "label": "Mimo V2.6 Flash Free",
+      "harness": "opencode",
+      "vendor": "Other",
+      "input": 324469,
+      "output": 62933,
+      "cacheRead": 3378312,
+      "cacheWrite": 0,
+      "reasoning": 30251,
+      "subagent": 2922199,
+      "total": 3765714
+    },
+    {
       "id": "other",
-      "label": "Other (8)",
+      "label": "Other (7)",
       "harness": "other",
       "vendor": "Other",
-      "input": 1580493,
-      "output": 324168,
-      "cacheRead": 16577142,
-      "cacheWrite": 373919,
-      "reasoning": 69071,
-      "subagent": 3018953,
-      "total": 18855722
+      "input": 652932,
+      "output": 79889,
+      "cacheRead": 5229308,
+      "cacheWrite": 723394,
+      "reasoning": 38820,
+      "subagent": 3150722,
+      "total": 6685523
     }
   ],
   "daily": [
@@ -228,24 +228,10 @@
       }
     },
     {
-      "date": "2026-09-26",
-      "total": 13863891,
-      "byHarness": {
-        "claude-code": 13863891
-      }
-    },
-    {
-      "date": "2026-09-27",
-      "total": 183947373,
-      "byHarness": {
-        "claude-code": 183947373
-      }
-    },
-    {
       "date": "2026-09-28",
-      "total": 335942251,
+      "total": 11484356,
       "byHarness": {
-        "claude-code": 335942251
+        "claude-code": 11484356
       }
     },
     {
@@ -405,6 +391,20 @@
       "total": 315507582,
       "byHarness": {
         "claude-code": 315507582
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "total": 85287105,
+      "byHarness": {
+        "claude-code": 85287105
+      }
+    },
+    {
+      "date": "2026-10-29",
+      "total": 12104187,
+      "byHarness": {
+        "claude-code": 12104187
       }
     }
   ],
