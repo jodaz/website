@@ -12,13 +12,23 @@ const { title, description, image, lang = 'en', alternateUrl } = Astro.props;
 const ogImage = image ?? (lang === 'es' ? '/og-image-es.png' : '/og-image.png');
 // Site standard: no trailing slashes in public URLs (home is the bare origin).
 // `URL` always serialises the root path as '/', so keep the final value as a string.
-const canonicalURL = new URL(Astro.url.pathname, Astro.site).href.replace(/\/+$/, '');
+const trimSlash = (url: string) => url.replace(/\/+$/, '');
+const canonicalURL = trimSlash(new URL(Astro.url.pathname, Astro.site).href);
+const alternateURL = alternateUrl ? trimSlash(alternateUrl) : undefined;
 
-// Compute hreflang URLs
-// lang='en' → this page is English, alternate is Spanish (alternateUrl)
-// lang='es' → this page is Spanish, alternate is English (alternateUrl)
-const enURL = lang === 'en' ? canonicalURL : (alternateUrl ?? new URL('/', Astro.site).href);
-const esURL = lang === 'es' ? canonicalURL : (alternateUrl ?? new URL('/es', Astro.site).href);
+// hreflang advertises a counterpart only when one exists. Without
+// `alternateUrl` (deep pages with no translation), emit the self language plus
+// x-default: English for an English page, otherwise the page itself.
+const alternates = alternateURL
+  ? [
+      { hreflang: 'en', href: lang === 'en' ? canonicalURL : alternateURL },
+      { hreflang: 'es', href: lang === 'es' ? canonicalURL : alternateURL },
+      { hreflang: 'x-default', href: lang === 'en' ? canonicalURL : alternateURL },
+    ]
+  : [
+      { hreflang: lang, href: canonicalURL },
+      { hreflang: 'x-default', href: canonicalURL },
+    ];
 ---
 
 <!-- Global Metadata -->
@@ -33,9 +43,9 @@ const esURL = lang === 'es' ? canonicalURL : (alternateUrl ?? new URL('/es', Ast
 <link rel="canonical" href={canonicalURL} />
 
 <!-- hreflang – tells Google these pages are language alternates, not duplicates -->
-<link rel="alternate" hreflang="en" href={enURL} />
-<link rel="alternate" hreflang="es" href={esURL} />
-<link rel="alternate" hreflang="x-default" href={enURL} />
+{alternates.map(({ hreflang, href }) => (
+  <link rel="alternate" hreflang={hreflang} href={href} />
+))}
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>

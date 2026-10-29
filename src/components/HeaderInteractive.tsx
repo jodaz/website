@@ -1,20 +1,31 @@
 // src/components/HeaderInteractive.tsx
-// React Island — logo name reveal + language switching. Same minimal bar on
-// every screen size: logo left, ES/EN right. No menu. The bar is fixed to the
-// viewport and turns opaque once the page scrolls so content never bleeds
-// through it.
+// React Island — logo name reveal, Writings link and language switching. Same
+// minimal bar on every screen size: logo left, Writings + ES/EN right. The bar
+// is fixed to the viewport and turns opaque once the page scrolls so content
+// never bleeds through it.
 import { useState, useEffect } from 'react';
 
 interface Props {
   logoSrc: string;
   lang: string;
   altLangHref: string;
+  writingsHref: string;
+  writingsLabel: string;
+  isWritingsActive: boolean;
   isOpaque?: boolean;
 }
 
 const SCROLL_THRESHOLD_PX = 8;
 
-const HeaderInteractive = ({ logoSrc, lang, altLangHref, isOpaque: forceOpaque = false }: Props) => {
+const HeaderInteractive = ({
+  logoSrc,
+  lang,
+  altLangHref,
+  writingsHref,
+  writingsLabel,
+  isWritingsActive,
+  isOpaque: forceOpaque = false,
+}: Props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isIntroing, setIsIntroing] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -53,36 +64,47 @@ const HeaderInteractive = ({ logoSrc, lang, altLangHref, isOpaque: forceOpaque =
           {/* Logo */}
           <a
             href={lang === 'es' ? '/es' : '/'}
-            className="flex items-center transition-transform hover:scale-105 group"
+            className="flex min-w-0 items-center transition-transform hover:scale-105 group"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
             <img
               src={logoSrc}
               alt="Jesus Ordosgoitty Logo"
-              className={`h-8 lg:h-9 w-auto transition-all duration-300 ${isOpaque ? 'brightness-0 invert' : ''}`}
+              className={`h-8 shrink-0 lg:h-9 w-auto transition-all duration-300 ${isOpaque ? 'brightness-0 invert' : ''}`}
             />
             <div
-              className={`flex items-center transition-all duration-700 ease-in-out overflow-hidden whitespace-nowrap ${
+              className={`flex min-w-0 items-center transition-all duration-700 ease-in-out overflow-hidden whitespace-nowrap ${
                 showName ? 'max-w-[300px] opacity-100' : 'max-w-0 opacity-0'
               } ${isOpaque ? 'text-white' : 'text-blue-50'}`}
             >
-              <span className={`h-1.5 w-1.5 rounded-full opacity-60 mr-4 ml-4 ${isOpaque ? 'bg-white' : 'bg-brand-bright'}`} />
+              <span className={`h-1.5 w-1.5 shrink-0 rounded-full opacity-60 mr-4 ml-4 ${isOpaque ? 'bg-white' : 'bg-brand-bright'}`} />
               <span className="text-lg lg:text-xl font-bold tracking-tight">
                 Jesus Ordosgoitty
               </span>
             </div>
           </a>
 
-          {/* Language switcher */}
-          <a
-            href={altLangHref}
-            onClick={handleLangSwitch}
-            className="text-sm px-3 py-1 rounded-none transition-all duration-300 font-bold text-blue-50 hover:bg-white hover:text-brand-dark"
-            aria-label={`Switch to ${altLang}`}
-          >
-            {altLang}
-          </a>
+          {/* Writings + language switcher */}
+          <div className="flex shrink-0 items-center gap-1">
+            <a
+              href={writingsHref}
+              aria-current={isWritingsActive ? 'page' : undefined}
+              className={`text-sm px-3 py-1 rounded-none border-b-2 transition-all duration-300 font-bold text-blue-50 hover:bg-white hover:text-brand-dark ${
+                isWritingsActive ? 'border-current' : 'border-transparent'
+              }`}
+            >
+              {writingsLabel}
+            </a>
+            <a
+              href={altLangHref}
+              onClick={handleLangSwitch}
+              className="text-sm px-3 py-1 rounded-none transition-all duration-300 font-bold text-blue-50 hover:bg-white hover:text-brand-dark"
+              aria-label={`Switch to ${altLang}`}
+            >
+              {altLang}
+            </a>
+          </div>
         </div>
       </div>
     </header>
