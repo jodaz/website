@@ -1,20 +1,20 @@
 {
   "$schema": "https://jodaz.vanguarddevs.com/schemas/ai-usage.json",
-  "generatedAt": "2026-11-02T03:51:06.578Z",
+  "generatedAt": "2026-11-03T03:51:22.712Z",
   "window": {
     "days": null,
     "from": "2026-09-04",
-    "to": "2026-10-31"
+    "to": "2026-11-03"
   },
   "totals": {
-    "input": 177495805,
-    "output": 17877825,
-    "cacheRead": 2312245701,
-    "cacheWrite": 32111439,
+    "input": 217571196,
+    "output": 21727739,
+    "cacheRead": 2677156321,
+    "cacheWrite": 32638938,
     "reasoning": 252032,
-    "subagent": 188387704,
-    "total": 2539730770,
-    "sessions": 476,
+    "subagent": 188305259,
+    "total": 2949094194,
+    "sessions": 576,
     "activeDays": 31
   },
   "harnesses": [
@@ -22,16 +22,16 @@
       "id": "claude-code",
       "label": "Claude Code",
       "approximate": false,
-      "input": 172091399,
-      "output": 17139212,
-      "cacheRead": 2266655555,
-      "cacheWrite": 32111439,
+      "input": 212166790,
+      "output": 20989126,
+      "cacheRead": 2631566175,
+      "cacheWrite": 32638938,
       "reasoning": 0,
-      "subagent": 174888981,
-      "total": 2487997605,
+      "subagent": 174806536,
+      "total": 2897361029,
       "models": 5,
-      "sessions": 409,
-      "subagents": 243
+      "sessions": 509,
+      "subagents": 233
     },
     {
       "id": "opencode",
@@ -70,52 +70,52 @@
       "label": "Deepseek V4.1 Flash",
       "harness": "claude-code",
       "vendor": "DeepSeek",
-      "input": 172078139,
-      "output": 14308332,
-      "cacheRead": 1562189794,
+      "input": 212153304,
+      "output": 17886980,
+      "cacheRead": 1897376774,
       "cacheWrite": 0,
       "reasoning": 0,
-      "subagent": 48272635,
-      "total": 1748576265
+      "subagent": 52376709,
+      "total": 2127417058
     },
     {
       "id": "claude-opus-5-5",
       "label": "Claude Opus 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 5938,
-      "output": 1545847,
-      "cacheRead": 375005168,
-      "cacheWrite": 13770867,
+      "input": 6050,
+      "output": 1653516,
+      "cacheRead": 394966459,
+      "cacheWrite": 13900986,
       "reasoning": 0,
-      "subagent": 34501591,
-      "total": 390327820
+      "subagent": 29200770,
+      "total": 410527011
     },
     {
       "id": "claude-sonnet-5-5",
       "label": "Claude Sonnet 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 4650,
-      "output": 996174,
-      "cacheRead": 272131766,
-      "cacheWrite": 11790475,
+      "input": 4624,
+      "output": 1009738,
+      "cacheRead": 278732067,
+      "cacheWrite": 11491152,
       "reasoning": 0,
-      "subagent": 37100579,
-      "total": 284923065
+      "subagent": 34205957,
+      "total": 291237581
     },
     {
       "id": "claude-haiku-5-5",
       "label": "Claude Haiku 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 2018,
-      "output": 288682,
-      "cacheRead": 54775819,
-      "cacheWrite": 6049968,
+      "input": 2158,
+      "output": 438715,
+      "cacheRead": 57937867,
+      "cacheWrite": 6746671,
       "reasoning": 0,
-      "subagent": 51960208,
-      "total": 61116487
+      "subagent": 55969132,
+      "total": 65125411
     },
     {
       "id": "muse-spark-1.3-contributor-free",
@@ -217,20 +217,6 @@
       "total": 1088571,
       "byHarness": {
         "claude-code": 1088571
-      }
-    },
-    {
-      "date": "2026-09-29",
-      "total": 27297823,
-      "byHarness": {
-        "claude-code": 27297823
-      }
-    },
-    {
-      "date": "2026-09-30",
-      "total": 21471816,
-      "byHarness": {
-        "claude-code": 21471816
       }
     },
     {
@@ -404,6 +390,20 @@
       "total": 989196,
       "byHarness": {
         "claude-code": 989196
+      }
+    },
+    {
+      "date": "2026-11-02",
+      "total": 445329937,
+      "byHarness": {
+        "claude-code": 445329937
+      }
+    },
+    {
+      "date": "2026-11-03",
+      "total": 12803126,
+      "byHarness": {
+        "claude-code": 12803126
       }
     }
   ],
