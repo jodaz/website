@@ -1,20 +1,20 @@
 {
   "$schema": "https://jodaz.vanguarddevs.com/schemas/ai-usage.json",
-  "generatedAt": "2026-11-12T03:51:11.654Z",
+  "generatedAt": "2026-11-13T03:51:09.862Z",
   "window": {
     "days": null,
     "from": "2026-09-04",
-    "to": "2026-11-11"
+    "to": "2026-11-12"
   },
   "totals": {
-    "input": 280529396,
-    "output": 27050512,
-    "cacheRead": 3377842136,
-    "cacheWrite": 41097100,
+    "input": 280529030,
+    "output": 27113354,
+    "cacheRead": 3384064736,
+    "cacheWrite": 41114406,
     "reasoning": 252032,
-    "subagent": 215556059,
-    "total": 3726519144,
-    "sessions": 719,
+    "subagent": 216622882,
+    "total": 3732821526,
+    "sessions": 721,
     "activeDays": 37
   },
   "harnesses": [
@@ -22,16 +22,16 @@
       "id": "claude-code",
       "label": "Claude Code",
       "approximate": false,
-      "input": 275124990,
-      "output": 26311899,
-      "cacheRead": 3332251990,
-      "cacheWrite": 41097100,
+      "input": 275124624,
+      "output": 26374741,
+      "cacheRead": 3338474590,
+      "cacheWrite": 41114406,
       "reasoning": 0,
-      "subagent": 202057336,
-      "total": 3674785979,
-      "models": 5,
-      "sessions": 652,
-      "subagents": 278
+      "subagent": 203124159,
+      "total": 3681088361,
+      "models": 7,
+      "sessions": 654,
+      "subagents": 269
     },
     {
       "id": "opencode",
@@ -83,13 +83,13 @@
       "label": "Claude Opus 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 9640,
-      "output": 2617138,
-      "cacheRead": 610751766,
-      "cacheWrite": 19801028,
+      "input": 9712,
+      "output": 2644214,
+      "cacheRead": 615091064,
+      "cacheWrite": 20023761,
       "reasoning": 0,
-      "subagent": 34746197,
-      "total": 633179572
+      "subagent": 38481438,
+      "total": 637768751
     },
     {
       "id": "claude-sonnet-5-5",
@@ -109,13 +109,13 @@
       "label": "Claude Haiku 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 2630,
-      "output": 663556,
-      "cacheRead": 65793522,
-      "cacheWrite": 8260967,
+      "input": 2580,
+      "output": 654874,
+      "cacheRead": 64693269,
+      "cacheWrite": 8183518,
       "reasoning": 0,
-      "subagent": 64827022,
-      "total": 74720675
+      "subagent": 64707210,
+      "total": 73534241
     },
     {
       "id": "muse-spark-1.3-contributor-free",
@@ -171,16 +171,16 @@
     },
     {
       "id": "other",
-      "label": "Other (6)",
+      "label": "Other (8)",
       "harness": "other",
       "vendor": "Other",
-      "input": 652906,
-      "output": 69734,
-      "cacheRead": 4288240,
-      "cacheWrite": 500129,
+      "input": 652518,
+      "output": 114182,
+      "cacheRead": 7271795,
+      "cacheWrite": 372151,
       "reasoning": 38820,
-      "subagent": 3150722,
-      "total": 5511009
+      "subagent": 602116,
+      "total": 8410646
     }
   ],
   "daily": [
@@ -210,13 +210,6 @@
       "total": 375379,
       "byHarness": {
         "grok": 375379
-      }
-    },
-    {
-      "date": "2026-09-24",
-      "total": 1088571,
-      "byHarness": {
-        "claude-code": 1088571
       }
     },
     {
@@ -256,9 +249,9 @@
     },
     {
       "date": "2026-10-13",
-      "total": 28648784,
+      "total": 19087996,
       "byHarness": {
-        "claude-code": 28648784
+        "claude-code": 19087996
       }
     },
     {
@@ -446,6 +439,13 @@
       "total": 105841802,
       "byHarness": {
         "claude-code": 105841802
+      }
+    },
+    {
+      "date": "2026-11-12",
+      "total": 16951741,
+      "byHarness": {
+        "claude-code": 16951741
       }
     }
   ],
