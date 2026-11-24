@@ -1,20 +1,20 @@
 {
   "$schema": "https://jodaz.vanguarddevs.com/schemas/ai-usage.json",
-  "generatedAt": "2026-11-23T03:51:08.489Z",
+  "generatedAt": "2026-11-24T03:51:12.099Z",
   "window": {
     "days": null,
     "from": "2026-09-04",
     "to": "2026-11-23"
   },
   "totals": {
-    "input": 229792166,
-    "output": 22847159,
-    "cacheRead": 2747567041,
-    "cacheWrite": 36732565,
+    "input": 229792288,
+    "output": 22876896,
+    "cacheRead": 2751158525,
+    "cacheWrite": 37117479,
     "reasoning": 457790,
     "subagent": 108386724,
-    "total": 3036938931,
-    "sessions": 685,
+    "total": 3040945188,
+    "sessions": 691,
     "activeDays": 40
   },
   "harnesses": [
@@ -22,15 +22,15 @@
       "id": "claude-code",
       "label": "Claude Code",
       "approximate": false,
-      "input": 221489403,
-      "output": 21795349,
-      "cacheRead": 2681635391,
-      "cacheWrite": 36732565,
+      "input": 221489525,
+      "output": 21825086,
+      "cacheRead": 2685226875,
+      "cacheWrite": 37117479,
       "reasoning": 0,
       "subagent": 94888001,
-      "total": 2961652708,
+      "total": 2965658965,
       "models": 6,
-      "sessions": 594,
+      "sessions": 600,
       "subagents": 152
     },
     {
@@ -83,13 +83,13 @@
       "label": "Claude Opus 5.5",
       "harness": "claude-code",
       "vendor": "Anthropic",
-      "input": 11896,
-      "output": 3294591,
-      "cacheRead": 709151851,
-      "cacheWrite": 22637523,
+      "input": 12018,
+      "output": 3324328,
+      "cacheRead": 712743335,
+      "cacheWrite": 23022437,
       "reasoning": 0,
       "subagent": 26471539,
-      "total": 735095861
+      "total": 739102118
     },
     {
       "id": "claude-sonnet-5-5",
@@ -465,9 +465,9 @@
     },
     {
       "date": "2026-11-23",
-      "total": 2612291,
+      "total": 6618548,
       "byHarness": {
-        "claude-code": 2612291
+        "claude-code": 6618548
       }
     }
   ],
